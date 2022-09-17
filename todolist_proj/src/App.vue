@@ -2,9 +2,17 @@
   <div id="app">
     <div class="todo-container">
       <div class="todo-wrap">
-        <TodoHeader/>
-        <TodoList/>
-        <TodoFooter/>
+        <TodoHeader :addTodo="addTodo"/>
+        <TodoList 
+          :todos="todos" 
+          :changeState="changeState"
+          :removeTodo="removeTodo"
+        />
+        <TodoFooter
+          :todos="todos"
+          :setAll="setAll"
+          :removeDoneTodo="removeDoneTodo"
+        />
       </div>
     </div>
   </div>
@@ -16,7 +24,41 @@ import TodoList from './components/TodoList'
 import TodoFooter from './components/TodoFooter'
 export default {
   name: 'App',
-  components: {TodoHeader, TodoList, TodoFooter}
+  components: {TodoHeader, TodoList, TodoFooter},
+  data() {
+    return {
+      todos: [
+        {id: '001', title: '吃饭', done: true},
+        {id: '002', title: '睡觉', done: true},
+        {id: '003', title: '打豆豆', done: false}
+      ]
+    }
+  },
+  methods: {
+    //将todo对象放入todos数据中
+    addTodo(todo){
+      this.todos.unshift(todo)
+    },
+    //根据id修改对应todo对象的done字段
+    changeState(id){
+      this.todos.forEach((todo)=>{
+        if (todo.id == id) 
+          todo.done = !todo.done
+      })
+    },
+    //根据id将对应的todo对象从列表中删除
+    removeTodo(id){
+      this.todos = this.todos.filter(todo=> todo.id !== id)
+    },
+    //根据Footer中checkbox的状态对todos的所有元素的状态进行修改
+    setAll(state){
+      this.todos.forEach((todo)=> todo.done = state)
+    },
+    //清除所有已完成的任务
+    removeDoneTodo(){
+      this.todos = this.todos.filter(todo=>!todo.done)
+    }
+  },
 }
 </script>
 

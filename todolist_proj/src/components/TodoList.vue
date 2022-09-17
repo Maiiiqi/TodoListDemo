@@ -1,9 +1,12 @@
 <template>
   <ul class="todo-main">
-    <TodoItem/>
-    <TodoItem/>
-    <TodoItem/>
-    <TodoItem/>
+    <TodoItem 
+      v-for="todoObj in todos" 
+      :key="todoObj.id" 
+      :todo="todoObj"
+      :changeState="changeState"
+      :removeTodo="removeTodo"
+    />
   </ul>
 </template>
 
@@ -11,7 +14,8 @@
 import TodoItem from './TodoItem.vue'
 export default {
   name: 'TodoList',
-  components: {TodoItem}
+  components: {TodoItem},
+  props: ['todos', 'changeState', 'removeTodo']
 }
 </script>
 

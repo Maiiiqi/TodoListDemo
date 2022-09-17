@@ -1,12 +1,31 @@
 <template>
   <div class="todo-header">
-    <input type="text" placeholder="请输入要保存的代办事项...."/>
+    <input type="text" placeholder="请输入要保存的代办事项，按回车键确认" v-model="userTodo" @keyup.enter="add"/>
   </div>
 </template>
 
 <script>
+import {nanoid} from 'nanoid'  //nanoid是一个从npm中下来的库，提供nanoid()函数用于生成一个uuid唯一标识
 export default {
-  name: 'TodoHeader'
+  name: 'TodoHeader',
+  methods: {
+    add(event){
+      //判断输入是否为空
+      if (!this.userTodo.trim()) {alert('输入不能为空！'); return;}
+      //根据用户输入创建todo对象
+      const todoObj = {id: nanoid(), title: event.target.value, done: false}
+      //将Todo对象传给父元素
+      this.addTodo(todoObj)
+      //清空对话框
+      this.userTodo = ''
+    }
+  },
+  props: ['addTodo'],
+  data() {
+    return {
+      userTodo: ''
+    }
+  },
 }
 </script>
 
