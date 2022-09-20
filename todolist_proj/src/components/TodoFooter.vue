@@ -19,6 +19,7 @@ export default {
       return this.todos.length
     },
     doneTotal(){
+      //reduce方法对数组进行筛选和统计
       return this.todos.reduce((pre, current)=> pre + (current.done?1:0), 0)
     },
     isAll: {

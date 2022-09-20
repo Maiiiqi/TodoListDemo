@@ -27,11 +27,9 @@ export default {
   components: {TodoHeader, TodoList, TodoFooter},
   data() {
     return {
-      todos: [
-        {id: '001', title: '吃饭', done: true},
-        {id: '002', title: '睡觉', done: true},
-        {id: '003', title: '打豆豆', done: false}
-      ]
+      //读取localStorage里的数据并转换成JSON对象
+      todos: JSON.parse(window.localStorage.getItem('todos')) || []   //当localStorage里没数据时，返回值为null，在Footer组件中使用到了todos.length，而null没有length属性，所以此处要||一个空数组[]
+      // []的length为0
     }
   },
   methods: {
@@ -59,6 +57,16 @@ export default {
       this.todos = this.todos.filter(todo=>!todo.done)
     }
   },
+  //监视todos的值，一旦发生变化就往localStorage里存储，实现数据同步
+  watch: {
+    todos: {
+      //todos是一个对象数组，对象内部的属性Vue默认监测不到，需要采用深度监视
+      deep: true,
+      handler(newValue){
+        window.localStorage.setItem('todos', JSON.stringify(newValue)) //setItem存入的是string类型的数据，需要stringify一下，否则存入的就只是一个简单的object
+      }
+    }
+  }
 }
 </script>
 
