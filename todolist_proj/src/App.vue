@@ -2,16 +2,27 @@
   <div id="app">
     <div class="todo-container">
       <div class="todo-wrap">
-        <TodoHeader :addTodo="addTodo"/>
+        <!-- 采用props的方式接收子组件的数据 -->
+        <!-- <TodoHeader :addTodo="addTodo"/> -->
+        <!-- 采用自定义事件 -->
+        <TodoHeader @addEvent="addTodo"/>
+        <!-- props -->
         <TodoList 
           :todos="todos" 
           :changeState="changeState"
           :removeTodo="removeTodo"
         />
-        <TodoFooter
+        <!-- props -->
+        <!-- <TodoFooter
           :todos="todos"
           :setAll="setAll"
           :removeDoneTodo="removeDoneTodo"
+        /> -->
+        <!-- 自定义事件 -->
+        <TodoFooter
+        :todos="todos"
+        @setAll="setAll"
+        @removeDoneTodo="removeDoneTodo"
         />
       </div>
     </div>

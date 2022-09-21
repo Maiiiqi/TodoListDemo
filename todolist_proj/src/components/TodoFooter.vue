@@ -13,7 +13,10 @@
 <script>
 export default {
   name: 'TodoFooter',
-  props: ['todos', 'setAll','removeDoneTodo'],
+  //接收父组件传递过来的数据以及方法
+  //props: ['todos', 'setAll','removeDoneTodo'],
+  //只接受数据
+  props: ['todos'],
   computed: {
     todoTotal(){
       return this.todos.length
@@ -28,13 +31,19 @@ export default {
       },
       set(value){
         //将isAll的值传给App，对todos整个List进行修改
-        this.setAll(value)
+        //调用父组件传递过来的方法
+        //this.setAll(value)
+        //or 触发自定义事件
+        this.$emit('setAll', value)
       }
     }
   },
   methods:{
     clearDone(){
-      this.removeDoneTodo()
+      //调用父组件传递过来的方法
+      //this.removeDoneTodo()
+      //or 触发自定义事件
+      this.$emit('removeDoneTodo')
     }
   }
 }

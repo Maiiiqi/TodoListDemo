@@ -15,11 +15,15 @@ export default {
       //根据用户输入创建todo对象
       const todoObj = {id: nanoid(), title: event.target.value, done: false}
       //将Todo对象传给父元素
-      this.addTodo(todoObj)
+      //调用父组件传递过来的方法
+      //this.addTodo(todoObj)
+      // or 触发自定义事件
+      this.$emit('addEvent', todoObj)
       //清空对话框
       this.userTodo = ''
     }
   },
+  // 采用props接收父组件传递过来的方法
   props: ['addTodo'],
   data() {
     return {
