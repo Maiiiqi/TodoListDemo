@@ -1,11 +1,17 @@
 <template>
   <ul class="todo-main">
-    <TodoItem 
+    <!-- 使用props方法将获取数据的方法传给Item组件 -->
+    <!-- <TodoItem 
       v-for="todoObj in todos" 
       :key="todoObj.id" 
       :todo="todoObj"
       :changeState="changeState"
       :removeTodo="removeTodo"
+    /> -->
+    <TodoItem 
+    v-for="todoObj in todos" 
+    :key="todoObj.id" 
+    :todo="todoObj"
     />
   </ul>
 </template>

@@ -6,12 +6,16 @@
         <!-- <TodoHeader :addTodo="addTodo"/> -->
         <!-- 采用自定义事件 -->
         <TodoHeader @addEvent="addTodo"/>
+
         <!-- props -->
-        <TodoList 
+        <!-- <TodoList 
           :todos="todos" 
           :changeState="changeState"
           :removeTodo="removeTodo"
-        />
+        /> -->
+        <!-- 采用全局事件总线 -->
+        <TodoList :todos="todos"/>
+
         <!-- props -->
         <!-- <TodoFooter
           :todos="todos"
@@ -77,6 +81,18 @@ export default {
         window.localStorage.setItem('todos', JSON.stringify(newValue)) //setItem存入的是string类型的数据，需要stringify一下，否则存入的就只是一个简单的object
       }
     }
+  },
+  //在当前组件挂载后为$bus绑定事件和回调
+  //回调函数要留在想要接收数据的组件中
+  mounted(){
+    //通过vc实例(此处的this)访问Vue原型对象上的$bus对象
+    this.$bus.$on('itemChange', this.changeState)
+    this.$bus.$on('itemRemove', this.removeTodo)
+  },
+  //在使用总线事件的组件销毁前解绑事件
+  beforeDestroy(){
+    this.$bus.$off('itemChange')
+    this.$bus.$off('itemRemove')
   }
 }
 </script>
