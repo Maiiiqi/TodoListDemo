@@ -37,6 +37,7 @@
 import TodoHeader from './components/TodoHeader'
 import TodoList from './components/TodoList'
 import TodoFooter from './components/TodoFooter'
+import pubsub from 'pubsub-js'
 export default {
   name: 'App',
   components: {TodoHeader, TodoList, TodoFooter},
@@ -85,14 +86,22 @@ export default {
   //在当前组件挂载后为$bus绑定事件和回调
   //回调函数要留在想要接收数据的组件中
   mounted(){
-    //通过vc实例(此处的this)访问Vue原型对象上的$bus对象
+    //全局事件总线——通过vc实例(此处的this)访问Vue原型对象上的$bus对象
     this.$bus.$on('itemChange', this.changeState)
-    this.$bus.$on('itemRemove', this.removeTodo)
+    //this.$bus.$on('itemRemove', this.removeTodo)
+
+    //or 通过消息订阅与发布实现remove功能
+    this.pid = pubsub.subscribe('removeMsg', (msgName, id)=>{ //为了让beforeDestroy也访问到pid字段，可以把它放在this——vc实例上
+      this.todos = this.todos.filter(todo=> todo.id !== id)  //此处的回调写成箭头函数，这样函数内的this也是指向vc实例。箭头函数接收两个参数，第一个为消息名，第二个才是传递过来的数据
+    })  //订阅消息
   },
   //在使用总线事件的组件销毁前解绑事件
   beforeDestroy(){
+    //解绑事件
     this.$bus.$off('itemChange')
-    this.$bus.$off('itemRemove')
+    //this.$bus.$off('itemRemove')
+    //取消订阅
+    pubsub.unsubscribe(this.pid)
   }
 }
 </script>

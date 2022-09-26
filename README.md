@@ -6,5 +6,4 @@ It is a Vue Demo imitating a TodoList App, includes following points:
 - local **storage**
 - self defined event for component(**$emit, $on, $off**)
 - global event bus(this.**$bus**)
-- ...
-
+- message subscribe and publish(using **pubsub.js** pkg)
