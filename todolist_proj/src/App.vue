@@ -71,6 +71,12 @@ export default {
     //清除所有已完成的任务
     removeDoneTodo(){
       this.todos = this.todos.filter(todo=>!todo.done)
+    },
+    //更新todo对象内容
+    updateItem(id, title){
+      this.todos.forEach((todo)=>{
+        if (todo.id == id)  todo.title = title
+      })
     }
   },
   //监视todos的值，一旦发生变化就往localStorage里存储，实现数据同步
@@ -89,6 +95,7 @@ export default {
     //全局事件总线——通过vc实例(此处的this)访问Vue原型对象上的$bus对象
     this.$bus.$on('itemChange', this.changeState)
     //this.$bus.$on('itemRemove', this.removeTodo)
+    this.$bus.$on('itemUpdate', this.updateItem)
 
     //or 通过消息订阅与发布实现remove功能
     this.pid = pubsub.subscribe('removeMsg', (msgName, id)=>{ //为了让beforeDestroy也访问到pid字段，可以把它放在this——vc实例上
@@ -128,6 +135,16 @@ export default {
     vertical-align: middle;
     cursor: pointer;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .btn-edit{
+    color: #fff;
+    background-color: rgb(126, 209, 241);
+    border: 1px solid rgb(90, 133, 150);
+    margin-right: 5px;
+  }
+  .btn-edit:hover{
+    color: #fff;
+    background-color: rgb(85, 175, 211);
   }
   .btn-danger{
     color: #fff;

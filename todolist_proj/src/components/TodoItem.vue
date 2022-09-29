@@ -2,14 +2,21 @@
   <li>
     <label>
       <input type="checkbox" :checked="todo.done" @change="transferChange(todo.id)"/>
-      <span>{{todo.title}}</span>
+      <span v-show="!todo.isEdit">{{todo.title}}</span>
+      <input v-show="todo.isEdit" 
+        :value="todo.title"
+        @blur="lostFocus(todo, $event)"
+        ref="inputBlock"
+        />
     </label>
     <button class="btn btn-danger" @click="deleteBtnClicked(todo.id)">删除</button>
+    <button class="btn btn-edit" @click="editBtnClicked(todo)">编辑</button>
   </li>
 </template>
 
 <script>
-  import pubsub from 'pubsub-js'
+  import { ReturnStatement } from 'babel-generator/lib/generators/statements'
+import pubsub from 'pubsub-js'
   export default {
     name: 'TodoItem',
     // 接收父组件传递过来的方法
@@ -32,8 +39,36 @@
           //this.$bus.$emit('itemRemove', id)
           //3.使用消息订阅与发布
           pubsub.publish('removeMsg', id)
-      }
-    },
+      },
+      //按下编辑按钮后对文本框进行编辑操作
+      editBtnClicked(todo){
+        //若todo身上没有isEdit属性(即第一次进行编辑时)，对其进行添加
+        if(!todo.hasOwnProperty('isEdit')){
+          //使用$set方法往vc实例上添加响应式属性
+          this.$set(todo, 'isEdit', true)
+        }
+        else{
+          //否则直接修改它的值
+          todo.isEdit = true
+        }
+        //在数据变更引起DOM重新解析后，调用下述回调
+        this.$nextTick(()=>{
+          this.$refs.inputBlock.focus()
+        })
+      },
+      lostFocus(todo, e){
+        //当input框失去焦点时修改isEdit的值
+        todo.isEdit = false
+        //若input框的内容为空时直接返回并弹窗提示
+        if (!e.target.value)
+        {
+          alert('输入不能为空!')
+          return
+        }
+        //将input框的内容同步至todo数据中
+        this.$bus.$emit('itemUpdate', todo.id, e.target.value)   //全局事件总线
+      } 
+    }
   }
 </script>
 
