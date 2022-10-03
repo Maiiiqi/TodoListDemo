@@ -1,21 +1,22 @@
 <template>
-  <li>
-    <label>
-      <input type="checkbox" :checked="todo.done" @change="transferChange(todo.id)"/>
-      <span v-show="!todo.isEdit">{{todo.title}}</span>
-      <input v-show="todo.isEdit" 
-        :value="todo.title"
-        @blur="lostFocus(todo, $event)"
-        ref="inputBlock"
-        />
-    </label>
-    <button class="btn btn-danger" @click="deleteBtnClicked(todo.id)">删除</button>
-    <button class="btn btn-edit" @click="editBtnClicked(todo)">编辑</button>
-  </li>
+  <transition name="todo" appear>
+    <li>
+      <label>
+        <input type="checkbox" :checked="todo.done" @change="transferChange(todo.id)"/>
+        <span v-show="!todo.isEdit">{{todo.title}}</span>
+        <input v-show="todo.isEdit"
+          :value="todo.title"
+          @blur="lostFocus(todo, $event)"
+          ref="inputBlock"
+          />
+      </label>
+      <button class="btn btn-danger" @click="deleteBtnClicked(todo.id)">删除</button>
+      <button class="btn btn-edit" @click="editBtnClicked(todo)">编辑</button>
+    </li>
+  </transition>
 </template>
 
 <script>
-  import { ReturnStatement } from 'babel-generator/lib/generators/statements'
 import pubsub from 'pubsub-js'
   export default {
     name: 'TodoItem',
@@ -67,7 +68,7 @@ import pubsub from 'pubsub-js'
         }
         //将input框的内容同步至todo数据中
         this.$bus.$emit('itemUpdate', todo.id, e.target.value)   //全局事件总线
-      } 
+      }
     }
   }
 </script>
@@ -106,5 +107,14 @@ import pubsub from 'pubsub-js'
   }
   li:hover button{
     display: block;
+  }
+  .todo-enter, .todo-leave-to{
+    transform: translateX(100%);
+  }
+  .todo-leave, .todo-enter-to{
+    transform: translateX(0);
+  }
+  .todo-enter-active, .todo-leave-active{
+    transition: 0.5s linear;
   }
 </style>
